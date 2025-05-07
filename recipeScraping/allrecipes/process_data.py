@@ -33,7 +33,7 @@ for _, row in df.iterrows():
                 break
     else:
         titles.append(row["title"])
-        ingredients.append(pd.DataFrame(row["ingredients"]))
+        ingredients.append(json.dumps(row["ingredients"]))
         instructions.append(row["instructions"])
         nutritionFacts.append(row["nutritionFacts"])
         tags.append(row["tags"])
@@ -57,6 +57,6 @@ new_df["nutritionFacts"] = nutritionFacts
 new_df["tags"] = tags
 new_df["meal"] = meals
 
-new_df.to_pickle('cleanedData.pkl')
+new_df.to_csv("cleanedData.csv")
 
 print(new_df.head(10))
