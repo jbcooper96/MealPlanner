@@ -44,20 +44,24 @@ new_ingredients = []
 for index, row in df.iterrows():
     ingredients = json.loads(row["ingredients"])
     for ingredient in ingredients:
+        drop = False
         if "ingredient" in ingredient:
-            if "optional garnishes: thinly sliced nori, cilantro, lime wedges, furikake seasoning":
+            if ingredient["ingredient"].lower() == "optional garnishes: thinly sliced nori, cilantro, lime wedges, furikake seasoning":
                 ing_names = ['nori' 'cilantro', 'lime']
                 ingredient["base_ingredient"] = ing_names
                 ingredient["category"] = "garnish"
             elif ingredient["ingredient"].lower() == "filling:":
+                print(ingredient)
                 drop_rows.append(index)
+                drop = True
                 break
             else:
                 ing_name = ingredient["ingredient"].lower()
                 ing_details = loaded_dict[ing_name]
                 ingredient["base_ingredient"] = ing_details["simple_name"]
                 ingredient["category"] = ing_details["category"]
-    new_ingredients.append(json.dumps(ingredients))
+    if not drop:
+        new_ingredients.append(json.dumps(ingredients))
 
 for row in drop_rows:
     df.drop(index=row, inplace=True)
